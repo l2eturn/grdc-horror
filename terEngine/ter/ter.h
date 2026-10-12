@@ -1,0 +1,17 @@
+#pragma once
+// terEngine — everything in one include.
+#include "ter/app/app.h"
+#include "ter/app/fps_camera.h"
+#include "ter/app/input.h"
+#include "ter/audio/audio.h"
+#include "ter/core/collide.h"
+#include "ter/core/math.h"
+#include "ter/gfx/pixel_canvas.h"
+#include "ter/gfx/shader.h"
+#include "ter/gfx/texture.h"
+#include "ter/scene/geometry.h"
+#include "ter/scene/gltf.h"
+#include "ter/scene/material.h"
+#include "ter/scene/object.h"
+#include "ter/scene/renderer.h"
+#include "ter/ui/canvas2d.h"

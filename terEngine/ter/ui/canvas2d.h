@@ -1,0 +1,120 @@
+#pragma once
+// HTML-canvas-like 2D drawing on CoreGraphics + CoreText (correct Thai shaping, emoji, the web fonts).
+// Use it for the HUD, menus, speech bubbles and any text texture.
+// Coordinates are y-down like a canvas.
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
+namespace ter {
+
+class Texture;
+
+struct RGBA {
+    float r = 0, g = 0, b = 0, a = 1;
+};
+// '#rgb', '#rrggbb', '#rrggbbaa', 'rgb(...)', 'rgba(...)', 'white' / 'black' / 'transparent'
+RGBA cssColor(const std::string& s);
+
+enum class TextAlign { Left, Center, Right };
+enum class TextBaseline { Alphabetic, Top, Middle, Bottom };
+
+struct GradientStop {
+    float offset;
+    RGBA color;
+};
+
+class Canvas2D {
+public:
+    Canvas2D(int w, int h);
+    ~Canvas2D();
+    Canvas2D(const Canvas2D&) = delete;
+    Canvas2D& operator=(const Canvas2D&) = delete;
+
+    int width() const { return w_; }
+    int height() const { return h_; }
+    void resize(int w, int h);
+
+    // ---------- state ----------
+    void save();
+    void restore();
+    void translate(float x, float y);
+    void rotate(float a);
+    void scale(float x, float y);
+    void setFill(const RGBA& c);
+    void setFill(const std::string& css) { setFill(cssColor(css)); }
+    void setStroke(const RGBA& c);
+    void setStroke(const std::string& css) { setStroke(cssColor(css)); }
+    void setLineWidth(float w);
+    void setLineCap(bool round);
+    void setGlobalAlpha(float a);
+    // CSS-like font: family ("Mali", "Cormorant Garamond", "Inter", or any installed font), px size, weight 100..900
+    void setFont(const std::string& family, float size, int weight = 400, bool italic = false);
+    void setTextAlign(TextAlign a) { align_ = a; }
+    void setTextBaseline(TextBaseline b) { baseline_ = b; }
+    void setLetterSpacing(float em) { tracking_ = em; }
+    void setShadow(float blur, const RGBA& color, float dx = 0, float dy = 0);
+    void clearShadow();
+    // additive "lighter" composite (glows)
+    void setAdditive(bool on);
+
+    // ---------- shapes ----------
+    void clear();
+    void clearRect(float x, float y, float w, float h);
+    void fillRect(float x, float y, float w, float h);
+    void strokeRect(float x, float y, float w, float h);
+    void beginPath();
+    void closePath();
+    void moveTo(float x, float y);
+    void lineTo(float x, float y);
+    void quadTo(float cx, float cy, float x, float y);
+    void arc(float x, float y, float r, float a0, float a1, bool ccw = false);
+    void ellipse(float x, float y, float rx, float ry, float rot = 0);
+    void rect(float x, float y, float w, float h);
+    void roundRect(float x, float y, float w, float h, float r);
+    void fill();
+    void stroke();
+    void clip();
+    // fill the current path with a gradient
+    void fillLinearGradient(float x0, float y0, float x1, float y1, const std::vector<GradientStop>& stops);
+    void fillRadialGradient(float x0, float y0, float r0, float x1, float y1, float r1, const std::vector<GradientStop>& stops);
+
+    // ---------- text ----------
+    float measureText(const std::string& utf8);
+    void fillText(const std::string& utf8, float x, float y);
+    void strokeText(const std::string& utf8, float x, float y);
+    // split into lines that fit maxWidth (CoreText line breaking, handles Thai without spaces)
+    std::vector<std::string> wrapText(const std::string& utf8, float maxWidth);
+
+    // ---------- images ----------
+    // draw a decoded RGBA image (rows top to bottom) into a rectangle; cover = CSS background-size: cover
+    void drawImage(const std::vector<uint8_t>& rgba, int iw, int ih, float x, float y, float w, float h, bool cover = false);
+
+    // drawImage(otherCanvas, 0, 0) for a canvas of the same size: copies its pixels (used by the minimap)
+    void copyFrom(const Canvas2D& o);
+
+    // upload into a texture (linear encoding like CanvasTexture); mipmaps = false for things drawn 1:1 on screen
+    void upload(Texture& t, bool nearest = false, bool mipmaps = true) const;
+    // the raw premultiplied pixels, rows top to bottom (v = 0 at the top), no copy: for full-screen
+    // overlays drawn with premultiplied blending (GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+    void uploadPremultiplied(Texture& t) const;
+
+private:
+    void textOp(const std::string& utf8, float x, float y, bool fill);
+    struct Impl;
+    std::unique_ptr<Impl> d;
+    int w_, h_;
+    TextAlign align_ = TextAlign::Left;
+    TextBaseline baseline_ = TextBaseline::Alphabetic;
+    float tracking_ = 0;
+};
+
+// Make a .ttf / .otf usable by name in setFont() (process-wide)
+bool registerFont(const std::string& path);
+// Register every font file in a folder
+void registerFonts(const std::string& dir);
+// The fonts shipped with terEngine: "Mali" (Thai + Latin), "Cormorant Garamond", "Inter". App calls this for you.
+void registerBuiltinFonts();
+
+}  // namespace ter
