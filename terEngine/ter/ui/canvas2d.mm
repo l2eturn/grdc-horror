@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <map>
+#include "ter/core/paths.h"
 #include "ter/gfx/texture.h"
 
 namespace ter {
@@ -491,7 +492,11 @@ void registerBuiltinFonts() {
     static bool done = false;
     if (done) return;
     done = true;
-    registerFonts(TER_FONT_DIR);
+    // shipped game: fonts copied next to the executable / into the bundle by ter_add_game();
+    // development: the engine's source folder
+    std::error_code ec;
+    std::string shipped = resourceDir() + "/fonts";
+    registerFonts(std::filesystem::is_directory(shipped, ec) ? shipped : TER_FONT_DIR);
 }
 
 }  // namespace ter

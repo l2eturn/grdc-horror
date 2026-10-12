@@ -51,9 +51,15 @@ FetchContent_Populate(cgltf)
 FetchContent_Populate(meshoptimizer)
 FetchContent_Populate(miniaudio)
 
-# window + input: use Homebrew's GLFW when installed, otherwise build it from source
-find_package(glfw3 3.4 QUIET)
-if(NOT glfw3_FOUND)
+# window + input: a static GLFW built from source, so games run on Macs without Homebrew.
+# TER_SYSTEM_GLFW links Homebrew's dylib instead (slightly faster first build, but not shippable).
+option(TER_SYSTEM_GLFW "Link the installed GLFW dylib instead of a static copy (games won't run on other Macs)" OFF)
+if(TER_SYSTEM_GLFW)
+  find_package(glfw3 3.4 REQUIRED)
+else()
+  # GLFW's Cocoa backend is Objective-C; without OBJC enabled CMake would compile its .m files as Objective-C++
+  enable_language(OBJC)
+  set(GLFW_LIBRARY_TYPE STATIC CACHE STRING "" FORCE)
   set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
   set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
   set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -94,6 +100,9 @@ set_source_files_properties(
   ter/audio/audio.cpp
   PROPERTIES COMPILE_OPTIONS "-w")
 set_source_files_properties(ter/gfx/image.mm ter/ui/canvas2d.mm PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+
+# ter_add_game(): package a game as a .app + upload-ready zip
+include(cmake/TerGame.cmake)
 
 if(TER_BUILD_EXAMPLES)
   add_subdirectory(examples)

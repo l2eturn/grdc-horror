@@ -6,6 +6,7 @@
 #include "ter/audio/audio.h"
 #include "ter/core/collide.h"
 #include "ter/core/math.h"
+#include "ter/core/paths.h"
 #include "ter/gfx/pixel_canvas.h"
 #include "ter/gfx/shader.h"
 #include "ter/gfx/texture.h"
