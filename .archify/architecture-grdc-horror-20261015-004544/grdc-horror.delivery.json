@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "4aa2434c-6bda-4917-80bc-202ede2edb70",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/smarttapon/coding_prac/grdc-horror/.archify/architecture-grdc-horror-20261015-004544/candidate.json",
+  "output": "/Users/smarttapon/coding_prac/grdc-horror/.archify/architecture-grdc-horror-20261015-004544/grdc-horror.html",
+  "specification": {
+    "sha256": "37fb948287cbe214e22e04e11d7ccb107158c180680b9cb83ec6705059af4927",
+    "bytes": 6514
+  },
+  "artifact": {
+    "sha256": "f95be470d0442ac1cc61d2dcdf57509ac4e7b768c153dd1483da1f1014948b7a",
+    "bytes": 790202
+  }
+}

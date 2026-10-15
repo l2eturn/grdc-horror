@@ -1,0 +1,17 @@
+# Rule 5 (23:25 street lights out): D1 stands in the open and doesn't hide -> the dancer comes for them
+@1   walkto 3 -1.6
++0   walkto 1.0 -0.4
++0   look 90 0                  # facing west along the road (toward the west lamp)
++0   shot d0_before
++0   clock 23:25
++2   shot d1_lights_off
++6.5 shot d2_dancer_coming
++2.0 shot d3_dancer_face
++3   shot d4_after
++1   log hide this time (from the start of the window)
++0   rule street_dark
++0   walkto 0.9 1.6
++0   key E
++4   shot d5_hidden_dancer
++25  shot d6_after_breath
++2   quit

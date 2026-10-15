@@ -1,0 +1,117 @@
+# The whole night in real time (~11 min), played the way a careful player would, plus a few slips to show the scares.
+# Run: build/grdc-horror.app/Contents/MacOS/grdc-horror --mute --play $PWD/playtests/full_night.txt --play-out <dir>
+# The log prints every line said ([say]), rule windows / broken rules, notices and collision overlaps ([overlap]).
+@1   shot 00_start
++0.5 walkto 3.6 -0.9
++0   walkto 1.2 -0.6
++0   walkto 0.4 1.0
++0   log read the rules
+@15  key Tab
++1   key E
++2   shot 01_rules
++1.5 key E
++0.5 key Tab
++0   walkto -0.5 1.1
++0   walkto -1.6 0.3                # out of the bench seat's E radius, so a missed talk can't sit us down
++0.5 lookat -1.4 1.1 2.05
++0   waitfor quiet 20
++0.5 key E                      # talk to Jimmy
++0   waitfor say:ว่าไง 8
++0.5 shot 02_jimmy_talk
++0.5 key 1
++0   walkto -0.5 1.1
+
++0   waitfor rule:phantom_buzz  # rule 3: leave the phone alone
++2   shot 03_buzz
+
++0   waitfor rule:shadow        # rule 4: look once, then away
++0   lookat -14 1.5 -7
++1   shot 04_shadow
++0.5 look 270 0
+
++0   waitfor bus                # 23:00: the only real way down
++0   walkto 1.2 -0.6
++0   look 270 0
++0   waitfor say:จะขึ้นไหม 40
++0.5 shot 05_bus
++0.5 key 1                      # get on...
++0   waitfor say:มากันกี่คน 40
++0.5 key 2                      # "two of us"
++0   waitfor say:คว้าแขน 40
++0.5 shot 06_jimmy_holds
+
++0   waitfor rule:street_dark   # rule 5: hide under the bench, breathe well
++0   breathbot on
++0   walkto 0.9 1.6
++0   key E
++4   shot 07_dancer_searching
++0   waitfor notice:ไปแล้ว 40
++0.5 shot 08_dancer_gone
++0   breathbot off
++1   key E
+
++0   waitfor van                # rule 6: refuse the van
++0   walkto 1.2 -0.6
++0   waitfor say:ไปในเมืองป่ะ 40
++0.5 shot 09_van
++0.5 key 2
+
++0   waitfor grandma            # rule 7: don't follow her into the forest
++0   walkto 4.2 -1.6
++0   lookat 9 1.2 -0.8
++2   shot 10_grandma
++28  shot 11_grandma_later
+
++0   waitfor rule:shelter_dark  # rule 8: under the west lamp within 10 s
++0   walkto 4.2 -2.0
++0   walkto -5.0 -2.0
++0.5 shot 12_under_lamp
+
++0   waitfor say:แอร์ดรอป 40       # Jimmy's AirDrop: decline (rule 1)
++0.5 shot 13_airdrop
++0.5 key 2
+
++0   waitfor rule:dragging      # rule 9: sit on the bench
++0   walkto -1.0 -0.4
++0   walkto -0.3 1.5
++0   key E
++2   shot 14_sitting
++30  key E
+
++0   waitfor rule:dark_bus      # rule 10: behind the shelter, no light, hold your breath
++0   breathbot on
++0   walkto 1.2 -0.6
++0   walkto 3.3 -0.9
++0   walkto 3.3 4.2
++0   walkto -1.2 4.3
++0   key E
++3   shot 15_dark_bus_driver
++0   waitfor notice:ไปแล้ว 40
++0.5 shot 16_driver_gone
++0   breathbot off
++1   key E
+
++0   waitfor rule:not_your_bag  # rule 11: leave the bag
++0   walkto 3.3 4.2
++0   walkto 3.3 -0.9
++0   walkto 1.2 -0.6
++0   walkto 1.6 1.4
++0   lookat 1.6 0.8 2.3
++0.5 shot 17_bag
+
++0   waitfor rule:scream        # rule 12: stand still... and fail the breathing, for the scare
++1   shot 18_scream
++0   waitfor notice:ได้ยินเสียงหายใจ 40
++0.3 shot 19_dancer_found
+
++0   waitfor bus                # 05:30: the last bus
++0   walkto 1.2 -0.6
++0   waitfor say:มาเร็ว 40
++0.5 shot 20_last_bus
++0.5 key 1
++0   waitfor ending
++0   waitfor say:ไม่ได้ขึ้นเขา 40
++0.5 shot 21_reveal
++0   waitfor say:ผีหลอก 40
++6   shot 22_title
++2   quit

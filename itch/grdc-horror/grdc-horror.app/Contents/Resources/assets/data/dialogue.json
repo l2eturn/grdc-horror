@@ -1,0 +1,146 @@
+// Conversations. Format: game/EVENTS_FORMAT.md. Answers are picked with the number keys.
+// The lines below are PLACEHOLDERS to test the system; the real script comes later.
+{
+  "scripts": {
+    // 23:00: the new electric bus — the only one that would really have taken you down the mountain.
+    // Whatever the player answers, Jimmy holds them back (action jimmy_hold) and quotes rule 6 ("only the big OLD bus")
+    "bus_driver": {
+      "start": "greet",
+      "nodes": {
+        "greet":  { "speaker": "คนขับรถ", "text": "ดึกขนาดนี้ ยังมีคนรอรถอยู่อีกเหรอ...", "next": "ask" },
+        "ask":    { "speaker": "คนขับรถ", "text": "จะขึ้นไหม? คันนี้คันสุดท้ายของคืนนี้แล้วนะ",
+                    "choices": [
+                      { "text": "ขึ้นครับ", "next": "count", "set": { "bus_answer": "board" } },
+                      { "text": "ไม่ขึ้น ผมรอเที่ยวแรก", "next": "refuse", "set": { "bus_answer": "refuse" } }
+                    ],
+                    "timeout": 15, "timeoutNext": "silent" },
+        "count":  { "speaker": "คนขับรถ", "text": "มากันกี่คน?",
+                    "choices": [
+                      { "text": "คนเดียว", "next": "hold", "set": { "bus_party": "alone" } },
+                      { "text": "สองคน", "next": "two", "set": { "bus_party": "two" } }
+                    ],
+                    "timeout": 10, "timeoutNext": "hold" },
+        "two":    { "speaker": "คนขับรถ", "text": "สองคน?... ผมเห็นคุณอยู่คนเดียวนะ", "next": "hold" },
+        "hold":   { "speaker": "จิมมี่", "text": "เดี๋ยว! (จิมมี่คว้าแขนคุณไว้แน่น)", "duration": 2.5, "action": "jimmy_hold", "next": "hold2" },
+        "hold2":  { "speaker": "จิมมี่", "text": "อ่านกฎสิ... ขึ้นได้แค่รถคันใหญ่ที่เก่า คันนี้มันใหม่เอี่ยมเลยนะ", "duration": 4, "next": "hold3" },
+        "hold3":  { "speaker": "คนขับรถ", "text": "...ตามใจ แต่เที่ยวแรกน่ะ ไม่มีหรอกนะ", "action": "leave", "set": { "bus_answer": "held_back" } },
+        "refuse": { "speaker": "คนขับรถ", "text": "ตามใจ... แต่เที่ยวแรกน่ะ ไม่มีหรอกนะ", "action": "leave" },
+        "silent": { "speaker": "คนขับรถ", "text": "......", "duration": 2, "action": "leave" }
+      }
+    },
+    // 01:05: the companion's phone "gets new rules" (rules.json "airdrop"); accepting brings his fake rules
+    "friend_airdrop": {
+      "start": "a",
+      "nodes": {
+        "a":    { "speaker": "จิมมี่", "text": "เฮ้ย... มือถือเรามีข้อความเข้ามา ทั้งที่ไม่มีสัญญาณเลย", "duration": 3.5, "next": "b" },
+        "b":    { "speaker": "จิมมี่", "text": "เป็นกฎชุดใหม่ เขาบอกให้ใช้แทนชุดเก่า เดี๋ยวแอร์ดรอปไปให้นะ",
+                  "choices": [
+                    { "text": "รับ", "action": "airdrop_accept", "next": "ok", "set": { "airdrop": "accepted" } },
+                    { "text": "ไม่รับ", "action": "airdrop_decline", "next": "no", "set": { "airdrop": "declined" } }
+                  ],
+                  "timeout": 15, "timeoutNext": "push" },
+        "ok":   { "speaker": "จิมมี่", "text": "ส่งไปแล้ว อ่านดูดี ๆ นะ ทำตามนี้แล้วเราจะรอดกันทั้งคู่" },
+        "no":   { "speaker": "จิมมี่", "text": "...ทำไมล่ะ เราแค่อยากให้แกรอดนะ" },
+        "push": { "speaker": "จิมมี่", "text": "ไม่ตอบงั้นส่งไปเลยละกัน", "action": "airdrop_accept", "set": { "airdrop": "pushed" } }
+      }
+    },
+    "bus_final": {
+      "start": "a",
+      "nodes": {
+        "a":     { "speaker": "คนขับรถ", "text": "เที่ยวแรกครับ... ขึ้นมาเลย", "next": "b" },
+        "b":     { "speaker": "จิมมี่", "text": "มาเร็ว! รอดแล้ว เรารอดแล้วนะ",
+                   "choices": [
+                     { "text": "ขึ้นรถ", "action": "player_board", "set": { "final_answer": "board" } },
+                     { "text": "ไม่ขึ้น", "next": "pull", "set": { "final_answer": "refuse" } }
+                   ],
+                   "timeout": 12, "timeoutNext": "pull" },
+        "pull":  { "speaker": "จิมมี่", "text": "จะอยู่ที่นี่คนเดียวเหรอ?... ไปด้วยกันสิ", "action": "player_board" }
+      }
+    },
+    "bus_final_drag": {
+      "start": "a",
+      "nodes": {
+        "a": { "speaker": "จิมมี่", "text": "ยืนทำอะไรอยู่ตรงนั้นล่ะ", "next": "b" },
+        "b": { "speaker": "จิมมี่", "text": "(จิมมี่เดินกลับมาคว้าแขนคุณไว้แน่น) ...ไปด้วยกันนะ", "action": "player_board" }
+      }
+    },
+    // the ending, inside the bus: "reveal" turns him to the player with his true face, "end" cuts to the title
+    "ending": {
+      "start": "a",
+      "nodes": {
+        "a": { "speaker": "จิมมี่", "text": "ในที่สุดก็ได้ขึ้นรถสักที...", "duration": 3.5, "next": "b" },
+        "b": { "speaker": "จิมมี่", "text": "แกทำตามกฎได้ดีมากเลยนะ ทุกข้อเลย", "duration": 3.5, "next": "c" },
+        "c": { "speaker": "จิมมี่", "text": "ยกเว้นข้อแรก... แกไว้ใจเราตั้งแต่ต้นจนจบเลย", "duration": 4, "next": "d" },
+        "d": { "speaker": "จิมมี่", "text": "เพราะจิมมี่ที่แกรู้จักน่ะ...", "duration": 3.5, "action": "reveal", "next": "e" },
+        "e": { "speaker": "จิมมี่", "text": "...ไม่ได้ขึ้นเขามากับแกตั้งแต่แรก แกมาคนเดียว", "duration": 3.5, "next": "f" },
+        "f": { "speaker": "จิมมี่", "text": "นี่แหละ ที่เขาเรียกว่า... ผีหลอก", "duration": 4, "action": "end" }
+      }
+    },
+    // rule 6: the small van (van.json). Accepting breaks the rule; the driver wears your face
+    "van_driver": {
+      "start": "greet",
+      "nodes": {
+        "greet":   { "speaker": "คนขับรถตู้", "text": "ไปในเมืองป่ะ? ขึ้นมาสิ เดี๋ยวไปส่ง ไม่คิดตังค์",
+                     "choices": [
+                       { "text": "ไปครับ", "next": "accept", "set": { "van_answer": "accept" } },
+                       { "text": "ไม่เป็นไรครับ รอรถเมล์", "next": "refuse", "set": { "van_answer": "refuse" } }
+                     ],
+                     "timeout": 12, "timeoutNext": "silent" },
+        "accept":  { "speaker": "คนขับรถตู้", "text": "(คนขับหันมายิ้ม... หน้าของเขาเหมือนหน้าคุณทุกอย่าง)", "duration": 4, "next": "accept2" },
+        "accept2": { "speaker": "คนขับรถตู้", "text": "ขอบใจนะ... งั้นที่นั่งนี้ เป็นของเราแล้ว", "duration": 3.5, "action": "leave" },
+        "refuse":  { "speaker": "คนขับรถตู้", "text": "ตามใจ... ข้างนอกหนาวนะ อยู่ได้ทั้งคืนเหรอ", "action": "leave" },
+        "silent":  { "speaker": "คนขับรถตู้", "text": "......", "duration": 2, "action": "leave" }
+      }
+    },
+    // ---- Jimmy (the companion, src/Companion.cpp + assets/data/companion.json). PLACEHOLDER lines.
+    // chatter on his own, early in the night: a good friend (and a slip or two for the sharp-eared)
+    "jimmy_c1": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "หนาวชิบ... ใครจะไปคิดว่าบนดอยจะหนาวขนาดนี้" } } },
+    "jimmy_c2": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "แบตแกเหลือเท่าไหร่? ของเราดับไปตั้งแต่ขึ้นมาบนนี้แล้ว" } } },
+    "jimmy_c3": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ถึงในเมืองแล้วไปกินข้าวต้มกันนะ เราเลี้ยงเอง" } } },
+    "jimmy_c4": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ได้ยินเสียงอะไรป่ะ...", "next": "b" }, "b": { "speaker": "จิมมี่", "text": "ไม่มีอะไรหรอก ลมน่ะ" } } },
+    // after midnight: something is off
+    "jimmy_c5": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "แกสังเกตไหม ตั้งแต่หัวค่ำยังไม่มีรถผ่านมาสักคันเลย" } } },
+    "jimmy_c6": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ข้อความในมือถือแกน่ะ... เชื่อมันทุกข้อเลยเหรอ" } } },
+    "jimmy_c7": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "เราจำไม่ได้แล้วว่ามาถึงที่นี่กี่โมง... แกจำได้ไหม" } } },
+    "jimmy_c8": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "(จิมมี่ฮัมเพลงเบา ๆ ทำนองเหมือนเสียงระนาดที่ได้ยินเมื่อกี้)", "duration": 4 } } },
+    // toward dawn: he stops pretending so hard
+    "jimmy_c9": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "อีกไม่นานแล้ว... เราจะได้ไปด้วยกัน" } } },
+    "jimmy_c10": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ไม่ต้องเปิดอ่านกฎแล้วก็ได้ เดี๋ยวเราจำให้" } } },
+    "jimmy_c11": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "แกหนาวไหม...", "next": "b" }, "b": { "speaker": "จิมมี่", "text": "เราไม่หนาวเลย ตั้งแต่เมื่อคืนแล้ว" } } },
+    // E: talk to him
+    "jimmy_talk1": { "start": "a", "nodes": {
+        "a": { "speaker": "จิมมี่", "text": "ว่าไง เบื่อเหรอ", "choices": [
+               { "text": "คุยเล่นหน่อย", "next": "b" }, { "text": "ไม่มีอะไร", "next": "c" } ], "timeout": 8, "timeoutNext": "c" },
+        "b": { "speaker": "จิมมี่", "text": "จำได้ป่ะ ตอนเราหลงทางขึ้นดอยครั้งแรก... วันนั้นหมอกก็หนาแบบนี้แหละ", "duration": 4.5 },
+        "c": { "speaker": "จิมมี่", "text": "อืม... อยู่ใกล้ ๆ เราไว้นะ" } } },
+    "jimmy_talk2": { "start": "a", "nodes": {
+        "a": { "speaker": "จิมมี่", "text": "ถ้ากลัว จับแขนเราไว้ก็ได้นะ", "choices": [
+               { "text": "ไม่กลัวหรอก", "next": "b" }, { "text": "แขนแกเย็นจัง", "next": "c", "set": { "jimmy_cold": "yes" } } ], "timeout": 8, "timeoutNext": "b" },
+        "b": { "speaker": "จิมมี่", "text": "เก่งนี่" },
+        "c": { "speaker": "จิมมี่", "text": "...ก็มันหนาวนี่นา" } } },
+    "jimmy_talk3": { "start": "a", "nodes": {
+        "a": { "speaker": "จิมมี่", "text": "แกจะไม่ทิ้งเราไว้ที่นี่ใช่ไหม", "choices": [
+               { "text": "ไม่ทิ้งหรอก", "next": "b", "set": { "jimmy_promise": "yes" } }, { "text": "......", "next": "c" } ], "timeout": 8, "timeoutNext": "c" },
+        "b": { "speaker": "จิมมี่", "text": "สัญญาแล้วนะ" },
+        "c": { "speaker": "จิมมี่", "text": "(จิมมี่ยิ้ม แต่ตาไม่ได้ยิ้มด้วย)" } } },
+    // when a rule's sign shows up he nudges the player toward breaking it
+    "jimmy_buzz": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "โทรศัพท์แกสั่นนะ ไม่ดูหน่อยเหรอ เผื่อที่บ้านโทรมา" } } },
+    "jimmy_shadow": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "เฮ้ย... ตรงราวกันตกนั่นมีคนยืนอยู่ป่ะ ดูให้หน่อยดิ เราตาไม่ค่อยดี" } } },
+    "jimmy_bag": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "นั่นกระเป๋าแกนี่ ลืมไว้ได้ไง หยิบไปสิ" } } },
+    "jimmy_van": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "เฮ้ย ไปส่งฟรีด้วย ไปกันเถอะ ดีกว่านั่งหนาวอยู่ตรงนี้" } } },
+    "jimmy_bus_gone": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ดีแล้วที่ไม่ขึ้น... รถคันนั้นไม่ได้พาใครลงไปถึงข้างล่างหรอก" } } },
+    "jimmy_hide": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ชู่ว... หลบก่อน อย่าส่งเสียง" } } },
+    "jimmy_saw_nothing": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "เมื่อกี้แกหลบทำไมอะ เราไม่เห็นมีอะไรเลยนะ" } } },
+    // after each broken rule (in order; the last one repeats)
+    "jimmy_strike1": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ไม่เป็นไร ๆ เราอยู่ตรงนี้" } } },
+    "jimmy_strike2": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "(จิมมี่ขยับเข้ามาใกล้อีกนิด)" } } },
+    "jimmy_strike3": { "start": "a", "nodes": { "a": { "speaker": "จิมมี่", "text": "ใกล้แล้วนะ..." } } },
+    "grandma_call":   { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "ช่วยยายหน่อยลูก... ล้อมันติดโคลน เข็นไม่ขึ้น" } } },
+    "grandma_thanks": { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "ขอบใจนะลูก... ยายจะจำหน้าหนูไว้" } } },
+    "grandma_giveup": { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "ไม่มีใครช่วยยายเลย..." } } },
+    "grandma_escort": { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "ขอบใจจ้ะลูก... ช่วยยายเข็นไปส่งบ้านหน่อยนะ บ้านยายอยู่ในป่านี่เอง", "duration": 6 } } },
+    "grandma_arrive": { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "ถึงแล้วจ้ะ... บ้านยายเอง", "duration": 4 } } },
+    "grandma_shrine": { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "อยู่กับยายที่นี่นะลูก...", "duration": 6 } } },
+    "grandma_neck":   { "start": "a", "nodes": { "a": { "speaker": "ยาย", "text": "เห็นยายใช่ไหม... ทำไมไม่ช่วยยายล่ะลูก", "duration": 5 } } }
+  }
+}

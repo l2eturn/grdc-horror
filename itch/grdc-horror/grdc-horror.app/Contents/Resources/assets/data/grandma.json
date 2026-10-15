@@ -1,0 +1,25 @@
+// The old woman with the stuck cart (rule 7). Format: game/EVENTS_FORMAT.md
+{
+  "appear": "00:10",          // in-game time she shows up (G key / --grandma: right away)
+  "face": "random",           // "normal" | "scary" | "random"
+  "pos": [9.0, 0, -0.8],      // her feet, on the shoulder by the path into the forest; the cart is 0.4 m in front of her
+  "rotY": -90,                // she pushes west, toward the path
+  "helpRadius": 2.2,          // E helps within this distance
+  "callEvery": 14,            // seconds between her calls for help
+  "stretchAfter": 25,         // ordinary face, ignored this long: the neck comes for you
+  "giveUpAfter": 40,          // scary face, ignored this long: she gives up and is gone
+  "neck": { "speed": 2.5, "stare": 7, "stopShort": 0.8, "maxReach": 25 },
+
+  // ordinary face, helped: you push the cart with her down the path to the spirit house (map "spirit_shrine")
+  "forest": {
+    "path": [[9.0, -0.8], [6.6, -0.7], [5.4, 0.6], [5.1, 3.0], [5.0, 10.0], [5.0, 16.0]],   // her feet, x/z
+    "speed": 0.75,            // m/s
+    "fogVisibility": 3.5,     // the fog at the end of the walk (m you can see), and how high it stands
+    "fogHeight": 12,
+    "headSpeed": 0.35,        // her head coming out of the shrine, m/s
+    "stare": 3,               // seconds the head stares in front of your face before it comes after you
+    "chaseSpeed": 3.0,        // m/s (after a slow start): faster than walking (2.2), slower than running (4.2)
+    "catchRadius": 0.75,
+    "safeZone": "shelter", "safeMargin": 2.0     // map zone where it gives up
+  }
+}

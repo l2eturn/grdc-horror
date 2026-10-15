@@ -1,0 +1,47 @@
+# Playtest A: 22:00 -> 01:10. Run: grdc-horror --mute --play playtests/night_a.txt --play-out <dir>
+@1   shot 00_start
++0.5 walkto 3 -1.6
++0   walkto 0 0.8
++0.5 lookat -1.4 1.1 2.05
++1   shot 01_jimmy_seated
++0.2 key E                      # talk to Jimmy
++2.5 shot 02_talk
++0.5 key 1
++6   log rule 3 (phone buzz)
++0   clock 22:30
++2   shot 03_buzz
++0.5 key Tab                    # pick the phone up: breaks rule 3
++2   key Tab
++1   log rule 4 (shadow)
++0   clock 22:50
++1   lookat -14 1.5 -7
++1.5 shot 04_shadow
++3   shot 05_shadow_after
++1   log 23:00 bus (the real one)
++0   walkto 1.2 -0.6
++0   clock 23:00
++17  shot 06_bus_arrived
++7   key 1                      # get on
++2   key 2                      # two of us
++2   shot 07_driver_two
++4   shot 08_jimmy_holds
++20  shot 09_bus_gone
++2   log 23:50 van
++0   clock 23:50
++16  shot 10_van
++4   key 2                      # refuse
++8   log 00:10 old woman (ordinary face)
++0   walkto 4 -0.6
++0   clock 00:09
++0   grandma normal
++3   lookat 9 1.2 -0.8
++0   shot 11_grandma
++15  shot 12_grandma_calls
++15  shot 13_grandma_neck
++10  shot 14_grandma_neck2
++5   log 01:05 airdrop
++0   clock 01:05
++4   shot 15_airdrop
++1   key 1                      # accept: breaks rule 1
++6   shot 16_after_airdrop
++1   quit

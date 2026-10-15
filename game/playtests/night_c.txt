@@ -1,0 +1,11 @@
+# Playtest C: the last bus at 05:30 and the ending
+@1   walkto 3 -1.6
++0   walkto 1.2 -0.6
++0   clock 05:29
++22  shot 30_final_bus
++4   key 1
++6   shot 31_boarding
++8   shot 32_ending
++10  shot 33_ending2
++10  shot 34_ending3
++3   quit

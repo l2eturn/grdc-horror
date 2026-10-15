@@ -1,0 +1,11 @@
+// Rule 6: a small van stops and the driver offers a free ride. Same format as bus.json (game/EVENTS_FORMAT.md),
+// driven by the same code: the bus model shrunk by "model" -> "scale" (placeholder until a real van model).
+// Accepting (dialogue flag van_answer = accept) breaks rule 6 (rules.json "small_van" check).
+{
+  "model": { "scale": [0.72, 0.62, 0.62], "frontText": ["", ""] },
+  // stopX puts its door (2.2 m behind the front) at the shelter
+  "route": { "laneZ": -2.6, "fromX": 80, "stopX": 3.2, "toX": -90, "speed": 11, "talkRadius": 6 },
+  "arrivals": [
+    { "at": "23:50", "script": "van_driver", "sign": "", "headlights": true, "wait": 15 }
+  ]
+}

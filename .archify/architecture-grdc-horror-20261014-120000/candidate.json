@@ -1,0 +1,435 @@
+{
+ "schema_version": 1,
+ "diagram_type": "architecture",
+ "meta": {
+  "title": "grdc-horror Architecture",
+  "output": ".archify/architecture-grdc-horror-20261014-120000/grdc-horror.html",
+  "quality_profile": "showcase"
+ },
+ "components": [
+  {
+   "id": "player",
+   "type": "external",
+   "label": "Player",
+   "sublabel": "WASD · Tab · E · F · M",
+   "pos": [
+    20,
+    240
+   ],
+   "size": [
+    160,
+    60
+   ]
+  },
+  {
+   "id": "data",
+   "type": "database",
+   "label": "assets/data/*.json",
+   "sublabel": "map · rules · dialogue · bus",
+   "pos": [
+    20,
+    440
+   ],
+   "size": [
+    160,
+    64
+   ]
+  },
+  {
+   "id": "settings",
+   "type": "database",
+   "label": "settings.txt",
+   "sublabel": "~/Library/App Support",
+   "pos": [
+    20,
+    700
+   ],
+   "size": [
+    160,
+    60
+   ]
+  },
+  {
+   "id": "main",
+   "type": "backend",
+   "label": "main.cpp",
+   "sublabel": "game loop · input · UI",
+   "pos": [
+    290,
+    180
+   ],
+   "size": [
+    140,
+    710
+   ]
+  },
+  {
+   "id": "clock",
+   "type": "backend",
+   "label": "GameClock",
+   "sublabel": "00:00 → 06:00",
+   "pos": [
+    510,
+    180
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "inbox",
+   "type": "backend",
+   "label": "Inbox",
+   "sublabel": "rule messages",
+   "pos": [
+    510,
+    310
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "phone",
+   "type": "frontend",
+   "label": "Phone + Screen",
+   "sublabel": "battery · flash · thread",
+   "pos": [
+    510,
+    440
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "dialogue",
+   "type": "frontend",
+   "label": "Dialogue",
+   "sublabel": "lines + 1-9 choices",
+   "pos": [
+    510,
+    570
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "bus",
+   "type": "backend",
+   "label": "BusEvent",
+   "sublabel": "bus + driver · Animator",
+   "pos": [
+    510,
+    700
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "world",
+   "type": "backend",
+   "label": "World",
+   "sublabel": "Props · Env · Trees · zones",
+   "pos": [
+    510,
+    830
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "app",
+   "type": "cloud",
+   "label": "ter::App",
+   "sublabel": "window · Input · Canvas2D",
+   "pos": [
+    760,
+    30
+   ],
+   "size": [
+    170,
+    64
+   ]
+  },
+  {
+   "id": "audio",
+   "type": "cloud",
+   "label": "ter::Audio",
+   "sublabel": "miniaudio · synth()",
+   "pos": [
+    760,
+    200
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "gltf",
+   "type": "cloud",
+   "label": "loadGltf",
+   "sublabel": "cgltf · animations",
+   "pos": [
+    760,
+    440
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "renderer",
+   "type": "cloud",
+   "label": "ter::Renderer",
+   "sublabel": "OpenGL · post fx · lights",
+   "pos": [
+    760,
+    830
+   ],
+   "size": [
+    170,
+    60
+   ]
+  },
+  {
+   "id": "blender",
+   "type": "external",
+   "label": "Blender scripts",
+   "sublabel": "modelResource/*_build.py",
+   "pos": [
+    1010,
+    200
+   ],
+   "size": [
+    180,
+    60
+   ]
+  },
+  {
+   "id": "models",
+   "type": "database",
+   "label": "assets/models/*.glb",
+   "sublabel": "bus · phone · sala · npc",
+   "pos": [
+    1010,
+    440
+   ],
+   "size": [
+    180,
+    60
+   ]
+  },
+  {
+   "id": "shaders",
+   "type": "database",
+   "label": "assets/shaders",
+   "sublabel": "mesh.frag volumetric fog",
+   "pos": [
+    1010,
+    830
+   ],
+   "size": [
+    180,
+    60
+   ]
+  }
+ ],
+ "boundaries": [
+  {
+   "kind": "region",
+   "label": "game/src — horror target",
+   "wraps": [
+    "main",
+    "clock",
+    "inbox",
+    "phone",
+    "dialogue",
+    "bus",
+    "world"
+   ]
+  },
+  {
+   "kind": "region",
+   "label": "terEngine (static lib)",
+   "wraps": [
+    "app",
+    "audio",
+    "gltf",
+    "renderer"
+   ]
+  }
+ ],
+ "connections": [
+  {
+   "id": "player-input",
+   "from": "player",
+   "to": "main",
+   "label": "keys/mouse",
+   "variant": "emphasis"
+  },
+  {
+   "id": "load-data",
+   "from": "data",
+   "to": "main",
+   "label": "load",
+   "variant": "dashed"
+  },
+  {
+   "id": "save-mute",
+   "from": "main",
+   "to": "settings",
+   "label": "mute",
+   "variant": "dashed"
+  },
+  {
+   "id": "run-loop",
+   "from": "main",
+   "to": "app",
+   "label": "app.run(frame)",
+   "variant": "emphasis",
+   "fromSide": "top",
+   "toSide": "left"
+  },
+  {
+   "id": "tick-clock",
+   "from": "main",
+   "to": "clock",
+   "label": "tick"
+  },
+  {
+   "id": "update-inbox",
+   "from": "main",
+   "to": "inbox",
+   "label": "update"
+  },
+  {
+   "id": "drive-phone",
+   "from": "main",
+   "to": "phone",
+   "label": "input"
+  },
+  {
+   "id": "drive-dialogue",
+   "from": "main",
+   "to": "dialogue",
+   "label": "input"
+  },
+  {
+   "id": "drive-bus",
+   "from": "main",
+   "to": "bus",
+   "label": "update"
+  },
+  {
+   "id": "drive-world",
+   "from": "main",
+   "to": "world",
+   "label": "update"
+  },
+  {
+   "id": "clock-due",
+   "from": "clock",
+   "to": "inbox",
+   "label": "due"
+  },
+  {
+   "id": "phone-reads",
+   "from": "phone",
+   "to": "inbox",
+   "label": "reads"
+  },
+  {
+   "id": "dialogue-actions",
+   "from": "dialogue",
+   "to": "bus",
+   "label": "actions"
+  },
+  {
+   "id": "app-audio",
+   "from": "app",
+   "to": "audio",
+   "label": "owns"
+  },
+  {
+   "id": "phone-model",
+   "from": "phone",
+   "to": "gltf",
+   "label": "phone.glb"
+  },
+  {
+   "id": "bus-model",
+   "from": "bus",
+   "to": "gltf",
+   "label": "bus/driver.glb",
+   "fromSide": "right",
+   "toSide": "bottom"
+  },
+  {
+   "id": "world-scene",
+   "from": "world",
+   "to": "renderer",
+   "label": "scene"
+  },
+  {
+   "id": "export-glb",
+   "from": "blender",
+   "to": "models",
+   "label": "export",
+   "variant": "dashed"
+  },
+  {
+   "id": "glb-load",
+   "from": "models",
+   "to": "gltf",
+   "label": "read"
+  },
+  {
+   "id": "fog-shader",
+   "from": "shaders",
+   "to": "renderer",
+   "label": "override",
+   "variant": "dashed"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "Game (game/src)",
+   "items": [
+    "main.cpp owns the per-frame loop and wires every system",
+    "Night clock releases rule messages into the phone Inbox",
+    "BusEvent + Dialogue run the driver encounter"
+   ]
+  },
+  {
+   "dot": "cyan",
+   "title": "terEngine",
+   "items": [
+    "C++20 / OpenGL / GLFW static library, three.js-style API",
+    "Deps fetched: glm, cgltf, meshoptimizer, nlohmann/json, miniaudio",
+    "ter_add_game() bundles assets into grdc-horror.app"
+   ]
+  },
+  {
+   "dot": "amber",
+   "title": "Data-driven content",
+   "items": [
+    "Level, clock, battery, rules, dialogue and bus come from JSON",
+    "Models authored by Blender scripts, exported as .glb",
+    "Textures are procedurally drawn in Textures.cpp"
+   ]
+  }
+ ]
+}

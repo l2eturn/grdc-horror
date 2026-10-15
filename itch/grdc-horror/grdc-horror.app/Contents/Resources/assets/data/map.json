@@ -1,0 +1,139 @@
+// Bus stop on a mountain road. Units are meters.
+// Axes: +X = east (right), -Z = north (forward), +Y = up. The shelter is at the origin.
+// North of the road: guardrail, then a cliff down into the foggy valley. South: forest, path down to the village.
+// Format reference: game/MAP_FORMAT.md
+{
+  "atmosphere": {
+    "hemiSky": "#26303e", "hemiGround": "#07080a", "hemiIntensity": 0.3,
+    "fogColor": "#10151b", "visibility": 28, "fogHeight": 3.5,
+    "vignette": 1.15, "warm": -0.06, "grain": 0.012
+  },
+
+  "sky": {
+    "horizon": "#10151b", "zenith": "#06080b", "below": "#0b0e12",
+    "mountains": [
+      { "radius": 80, "height": [4, 20], "color": "#0d1117", "seed": 4 },
+      { "radius": 70, "height": [-6, 11], "color": "#0b0e13", "seed": 9 }
+    ],
+    "moon": { "dir": [0.5, 0.42, -1], "size": 3.2, "color": "#aab6c4", "brightness": 0.45, "halo": 0.2 }
+  },
+
+  "ground": { "min": [-45, -8.6], "max": [45, 45], "texture": "grass", "tile": 4 },
+  "bounds": { "min": [-30, -8], "max": [30, 30] },
+
+  "spawn": { "pos": [7, 0, -3.5], "yawDeg": 125 },
+
+  "objects": [
+    // ---- the road (east-west) with gravel shoulders
+    { "type": "strip", "from": [-45, -4], "to": [45, -4], "width": 6, "texture": "asphalt", "tile": 8, "layer": 2, "roughness": 0.3 },
+    { "type": "strip", "from": [-45, -7.8], "to": [45, -7.8], "width": 1.6, "texture": "dirt", "tile": 3, "color": "#9a958c" },
+    { "type": "strip", "from": [-45, -0.5], "to": [45, -0.5], "width": 1.0, "texture": "dirt", "tile": 3, "color": "#9a958c" },
+
+    // ---- on the road surface: puddles, fallen needles along the edges, oil stains, an old skid mark
+    { "type": "puddles", "count": 16, "seed": 31, "min": [-30, -6.6], "max": [30, -1.4], "size": [0.5, 1.8] },
+    { "type": "decals", "texture": "litter", "count": 70, "seed": 32, "min": [-30, -7.4], "max": [30, -6.3], "size": [0.5, 1.1] },
+    { "type": "decals", "texture": "litter", "count": 60, "seed": 33, "min": [-30, -1.7], "max": [30, -0.2], "size": [0.5, 1.1] },
+    { "type": "decals", "texture": "stain", "count": 10, "seed": 34, "min": [-28, -5.6], "max": [28, -2.4], "size": [0.6, 1.4], "opacity": 0.8 },
+    { "type": "decals", "texture": "skid", "count": 1, "seed": 35, "min": [-14, -5.2], "max": [-10, -4.8], "size": [1.6, 1.6], "aspect": 4, "align": 1 },
+
+    // ---- roadside: drainage channel, kilometre stone, warning signs, a second lamp further along
+    { "type": "gutter", "from": [-30, -0.7], "to": [-3.4, -0.7], "width": 0.5 },
+    { "type": "gutter", "from": [5.0, -0.7], "to": [30, -0.7], "width": 0.5 },
+    { "type": "km_post", "pos": [-13, 0, -0.25], "route": "1095", "place": "ดอยหมอก", "km": 12 },
+    { "type": "road_sign", "pos": [24, 0, -0.3], "rotY": -90, "shape": "diamond", "symbol": "curve_left", "text": "ทางโค้ง" },
+    { "type": "road_sign", "pos": [-22, 0, -7.1], "rotY": 90, "shape": "diamond", "symbol": "animal", "text": "ระวังสัตว์ข้าม" },
+    { "type": "road_sign", "pos": [-28, 0, -0.3], "rotY": -90, "shape": "circle", "symbol": "number", "text": "40" },
+    { "type": "lamp_post", "pos": [22, 0, -0.6], "rotY": 180, "height": 6, "reach": 1.8, "intensity": 2.0, "range": 10, "flicker": 0.12 },
+
+    // ---- north edge: guardrail, power line, then the cliff into the valley
+    { "type": "guardrail", "from": [-45, -7.5], "to": [45, -7.5], "height": 0.75, "spacing": 2 },
+    { "type": "power_line", "from": [-50, -8.2], "to": [50, -8.2], "spacing": 25, "height": 8.5, "sag": 0.8 },
+    { "type": "cliff", "from": [-45, -8.6], "to": [45, -8.6], "out": [0, -1], "depth": 40, "lean": 10 },
+
+    // ---- south edge: guide posts
+    { "type": "delineators", "from": [-40, -0.2], "to": [44, -0.2], "spacing": 12 },
+
+    // ---- the shelter (sala), open side facing the road (local -Z = north)
+    { "type": "bus_shelter", "pos": [0, 0, 1.5], "rotY": 0,
+      "title": "ศาลาที่พักผู้โดยสาร", "subtitle": "บ้านดอยหมอก",
+      "light": { "intensity": 1.3, "range": 6.5, "flicker": 0.06 } },
+
+    // ---- bus-stop sign and a bin
+    { "type": "sign", "pos": [4.0, 0, -0.9], "rotY": 180,
+      "lines": ["ป้ายรถโดยสาร", "บ้านดอยหมอก", "รถเที่ยวแรก 05:30"] },
+    { "type": "bin", "pos": [4.1, 0, 0.4] },
+
+    // ---- street lamps: one working (flickers), one dead across the road
+    { "type": "lamp_post", "id": "lamp_west", "pos": [-5.5, 0, -0.6], "rotY": 180, "height": 6, "reach": 1.8, "intensity": 2.4, "range": 11, "flicker": 0.04 },
+    // the east end of the stop (rule 2: don't walk past the two lamp posts)
+    { "type": "lamp_post", "id": "lamp_east", "pos": [10, 0, -0.6], "rotY": 180, "height": 6, "reach": 1.8, "intensity": 2.0, "range": 10, "flicker": 0.06 },
+    { "type": "lamp_post", "pos": [12, 0, -7.0], "rotY": 0, "height": 6, "reach": 1.8, "on": false },
+
+    // ---- dirt path down to the village (south)
+    { "type": "strip", "from": [5, 0.5], "to": [5, 24], "width": 2.2, "texture": "dirt", "tile": 3, "layer": 1 },
+
+    // ---- at the end of the path: the old banyan and its spirit house (the old woman's home, rule 6)
+    { "type": "spirit_shrine", "pos": [6.0, 0, 21.0], "rotY": 180 },
+
+    // ---- village windows far below: unlit + no fog, so they glow through the mist
+    { "type": "box", "pos": [-4, 1.2, 38], "size": [0.5, 0.35, 0.1], "color": "#7a5a2a", "unlit": true, "fog": false, "collide": false },
+    { "type": "box", "pos": [3, 1.0, 42], "size": [0.4, 0.3, 0.1], "color": "#6a4c22", "unlit": true, "fog": false, "collide": false },
+    { "type": "box", "pos": [11, 1.4, 36], "size": [0.5, 0.35, 0.1], "color": "#7a5a2a", "unlit": true, "fog": false, "collide": false },
+
+    // ---- forest, rocks and grass south of the road, keeping the shelter and the path clear
+    { "type": "forest", "count": 260, "seed": 11, "dead": 0.08, "saplings": 0.15, "min": [-32, 1.5], "max": [32, 32],
+      "clear": [ { "min": [-4.5, -1], "max": [4.5, 5.5] }, { "min": [3.4, 0], "max": [6.6, 25] } ] },
+    { "type": "rocks", "count": 45, "seed": 5, "min": [-30, 1], "max": [30, 30], "scale": [0.2, 1.1],
+      "clear": [ { "min": [-3.5, -1], "max": [3.5, 4.5] }, { "min": [3.8, 0], "max": [6.2, 25] } ] },
+    { "type": "rocks", "count": 10, "seed": 8, "min": [-44, -8.5], "max": [44, -7.9], "scale": [0.2, 0.5] },
+    { "type": "grass", "count": 1600, "seed": 3, "min": [-34, -0.2], "max": [34, 32],
+      "clear": [ { "min": [-2.8, -0.2], "max": [2.8, 3.2] }, { "min": [4.3, 0], "max": [5.7, 25] } ] },
+    { "type": "grass", "count": 160, "seed": 6, "min": [-45, -8.5], "max": [45, -7.6] },
+
+
+    // ---- drifting smoke: between the trees, over the road, and rising out of the valley
+    { "type": "smoke", "count": 45, "seed": 21, "min": [-34, -6], "max": [34, 32], "size": [5, 10], "height": [0.8, 2.6], "opacity": 0.4 },
+    { "type": "smoke", "count": 18, "seed": 22, "min": [-45, -26], "max": [45, -10], "size": [16, 26], "height": [-6, -2], "opacity": 0.3 },
+
+    // ---- the companion (placeholder person) waiting in the shelter
+    { "type": "companion", "pos": [-1.4, 0.18, 1.85] },
+
+    // ---- rule events, hidden until their time (rules.json "check" signals)
+    // rule 11: a bag just like yours on the far end of the bench
+    { "type": "bag", "pos": [1.6, 0.63, 2.3], "rotY": -10 },
+    // rule 4: a figure standing still across the road, by the guardrail
+    { "type": "shadow_figure", "pos": [-14, 0, -7.0], "rotY": 0 }
+  ],
+
+  // places to hide (E): "eye" = where the view goes, "yawDeg" = the way it faces (0 = north, -Z),
+  // "radius" = how close to get in, "lookDeg" = how far the view may turn from yawDeg
+  "hideSpots": [
+    { "id": "under_bench", "eye": [0.9, 0.32, 2.36], "yawDeg": 0, "radius": 1.3, "lookDeg": 45 },
+    // "kind": "sit" = a seat (rule 9: up on the bench until the dragging stops), next to where the companion sits
+    { "id": "bench_seat", "kind": "sit", "eye": [-0.3, 1.3, 2.3], "yawDeg": 0, "radius": 1.3, "lookDeg": 100 },
+    { "id": "behind_shelter", "eye": [-1.2, 0.95, 3.35], "yawDeg": 0, "radius": 1.4, "lookDeg": 60 }
+  ],
+
+  // SHOWCASE (temporary): lights the row of models in front of the spawn point
+  "lights": [ { "pos": [5.8, 2.6, -2.6], "color": "#fff1dc", "intensity": 2.2, "range": 8 } ],
+
+  "zones": [
+    { "id": "shelter", "min": [-2.5, 0, 0], "max": [2.5, 3, 3] },
+    { "id": "road", "min": [-45, 0, -7], "max": [45, 3, -1] },
+    { "id": "path_down", "min": [3.9, 0, 4], "max": [6.1, 3, 24] },
+    // rule 2: the stretch between the two lamp posts at either end of the stop (x -5.5 and x 10)
+    { "id": "stop_area", "min": [-6, 0, -9], "max": [10.5, 3, 31] },
+    // rule 8: the pool of light under the working lamp at x -5.5 (its head hangs over z -2.4)
+    { "id": "lamp_light", "min": [-7.3, 0, -4.2], "max": [-3.7, 3, -0.6] }
+  ],
+
+  "sounds": [
+    { "sound": "wind", "volume": 1.0 },
+    { "sound": "buzz", "pos": [0, 2.4, 1.5], "volume": 0.8, "maxDistance": 10 },
+    { "sound": "buzz", "pos": [-5.5, 6.4, -2.3], "volume": 0.6, "maxDistance": 12 }
+  ],
+
+  "ambient": [
+    { "sound": "cricket", "every": [0.6, 2.5], "radius": [4, 14], "volume": 1.0 }
+  ]
+}

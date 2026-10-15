@@ -1,0 +1,30 @@
+# Playtest B: hiding + dancer (rule 5 forced), the bag (rule 11), the old woman's forest walk, the last bus
+@1   walkto 3 -1.6
++0   walkto 1.2 -0.6
++0   walkto 0.9 1.6
++0   log rule 5 forced (no street-light signal yet)
++0   rule street_dark
++1   key E                      # hide under the bench
++3   shot 20_hidden
++4   shot 21_dancer
++20  shot 22_after_breath
++1   key E                      # come out
++2   log 04:00 bag
++0   clock 04:00
++3   walkto 1.6 1.6
++0.3 lookat 1.6 0.8 2.3
++0.5 shot 23_bag
++0.2 key E
++2   shot 24_bag_taken
++2   log forest walk (help the ordinary-face old woman)
++0   walkto 3 -1.6
++0   walkto 8 -0.8
++0   grandma normal
++3   key E
++5   shot 25_forest1
++15  shot 26_forest2
++15  shot 27_forest3
++15  shot 28_forest4
++10  shot 29_forest5
++8   shot 30_woke_up
++3   quit

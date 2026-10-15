@@ -1,0 +1,13 @@
+// The bus that stops at the shelter (model assets/models/bus.glb, driver assets/models/driver.glb).
+// Format: game/EVENTS_FORMAT.md. B (or --bus) calls the first arrival right away while testing.
+{
+  // the lane it drives along (westbound, doors toward the shelter), where it stops (front door at the shelter)
+  "route": { "laneZ": -2.6, "fromX": 80, "stopX": 4.5, "toX": -90, "speed": 9, "talkRadius": 7 },
+  "arrivals": [
+    // 23:00: a new electric bus — the only real way down. Jimmy holds the player back (dialogue bus_driver)
+    { "at": "23:00", "script": "bus_driver", "sign": "8  ดอยหมอก - ตัวเมือง", "headlights": true, "wait": 15 },
+    // the last one: dawn, the companion gets on with the player -> the ending (src/Ending.cpp)
+    { "at": "05:30", "script": "bus_final", "dragScript": "bus_final_drag", "final": true,
+      "sign": "เที่ยวแรก  ดอยหมอก - ตัวเมือง", "headlights": true, "wait": 20 }
+  ]
+}

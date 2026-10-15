@@ -1,0 +1,9 @@
+{
+  "clock": { "start": "22:00", "end": "05:30", "secondsPerHour": 80 },
+  "battery": { "start": 64, "idlePerMinute": 1.0, "screenPerMinute": 3.0, "flashPerMinute": 4.0 },
+  "breath": {
+    "easy": { "arrowsMin": 3, "arrowsMax": 4, "bpm": 60, "rounds": 4, "perfect": 0.04, "good": 0.1, "missNoise": 0.4, "gaspNoise": 0.18, "drain": 0.03 },
+    "hard": { "arrowsMin": 5, "arrowsMax": 6, "bpm": 84, "rounds": 6, "perfect": 0.03, "good": 0.07, "missNoise": 0.4, "gaspNoise": 0.25, "drain": 0.02 }
+  },
+  "phone": { "sender": "ไม่ทราบชื่อ", "date": "วันศุกร์ที่ 13 ตุลาคม", "carrier": "ไม่มีบริการ" }
+}

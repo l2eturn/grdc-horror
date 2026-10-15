@@ -1,0 +1,19 @@
+# Rule 10 (03:00 dark bus): A hides behind the shelter (driver searches), B stays out (driver finds you)
+@1   walkto 3.6 -0.9
++0   walkto 3.8 4.2
++0   walkto -1.2 4.3
++0   log A: waiting behind the shelter
++0   clock 03:00
++3   key E                      # hide behind the shelter
++5   shot k1_dark_bus_hidden
++5   shot k2_driver_searching
++30  shot k3_after
++20  log B: rule 10 again, standing on the road
++0   key E
++2   walkto 3 -1.2
++0   look 270 0                 # facing east, where it comes from
++0   rule dark_bus
++4   shot k4_dark_bus_coming
++5.5 shot k5_driver
++1.0 shot k6_driver_face
++5   quit

@@ -1,0 +1,54 @@
+// Jimmy, the companion (src/Companion.cpp). Format: game/EVENTS_FORMAT.md ("companion.json").
+// He sits on the bench, gets up and follows when the player wanders off, chats now and then, answers E, reacts to
+// each rule's sign (nudging the player toward breaking it), and steps closer after every broken rule.
+// Scripts are in dialogue.json.
+{
+  "name": "จิมมี่",
+  // where he sits (feet position + facing; 180 = facing the road)
+  "seat": { "pos": [-1.4, 0.18, 2.05], "rotY": 180 },
+  "walkSpeed": 1.5,
+  "followDist": 1.8,          // how close he keeps to the player when following
+  "closerPerStrike": 0.3,     // ... minus this per broken rule
+  "minDist": 0.7,
+  "followAfter": 4.5,         // the player is this far away -> he gets up and follows
+  "sitAfter": 8,              // the player has been back in the shelter this long -> he sits down again
+  "footsteps": false,         // a slip for sharp ears: he makes no sound when he walks
+
+  // chatter on his own: every N seconds (random in range) while the player is near and nothing else is said
+  "chatter": {
+    "every": [28, 50], "radius": 6,
+    "phases": [
+      { "until": "00:00", "scripts": ["jimmy_c1", "jimmy_c2", "jimmy_c3", "jimmy_c4"] },
+      { "until": "03:00", "scripts": ["jimmy_c5", "jimmy_c6", "jimmy_c7", "jimmy_c8"] },
+      { "until": "05:30", "scripts": ["jimmy_c9", "jimmy_c10", "jimmy_c11"] }
+    ]
+  },
+  // E next to him
+  "talk": {
+    "radius": 1.8,
+    "phases": [
+      { "until": "00:00", "scripts": ["jimmy_talk1"] },
+      { "until": "03:00", "scripts": ["jimmy_talk2", "jimmy_talk1"] },
+      { "until": "05:30", "scripts": ["jimmy_talk3"] }
+    ]
+  },
+  // a rule's sign (rules.json "check" -> "signal") -> what he says
+  "signals": {
+    "phone_buzz": "jimmy_buzz",
+    "shadow_figure": "jimmy_shadow",
+    "bag": "jimmy_bag",
+    "small_van": "jimmy_van",
+    "real_bus_gone": "jimmy_bus_gone"   // main.cpp: the 23:00 bus drove off without the player      // not a rule window: main.cpp sends it when the van pulls up
+  },
+  // while a rule's window is open he does this instead: "sit" (on his seat), "crouch" / "stand" at pos facing rotY.
+  // "say" when it opens, "after" when it closes
+  "rules": {
+    "street_dark": { "do": "crouch", "pos": [-1.5, 0.18, 0.9], "rotY": 180, "say": "jimmy_hide" },   // in the shelter, by the side bench
+    "dragging":    { "do": "sit" },
+    // rule 10: he does NOT hide. He stands at the roadside facing the dark bus, and it doesn't see him
+    "dark_bus":    { "do": "stand", "pos": [2.2, 0, -0.9], "rotY": 180, "after": "jimmy_saw_nothing" },
+    "scream":      { "do": "stand" }
+  },
+  // after each broken rule, in order (the last repeats)
+  "strikes": ["jimmy_strike1", "jimmy_strike2", "jimmy_strike3"]
+}

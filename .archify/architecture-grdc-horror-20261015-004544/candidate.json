@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "grdc-horror Architecture",
+    "output": ".archify/architecture-grdc-horror-20261015-004544/grdc-horror.html",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "components": [
+    { "id": "player", "type": "external", "label": "Player", "sublabel": "WASD · Tab · E · F · arrows", "pos": [20, 60], "size": [170, 64] },
+    { "id": "data", "type": "database", "label": "assets/data/*.json", "sublabel": "rules · map · dialogue · bus", "pos": [20, 340], "size": [170, 64] },
+    { "id": "settings", "type": "database", "label": "settings.txt", "sublabel": "mute flag", "pos": [20, 480], "size": [170, 64] },
+    { "id": "playtest", "type": "external", "label": "Playtest", "sublabel": "playtests/*.txt", "pos": [20, 620], "size": [170, 64], "tag": "--play" },
+
+    { "id": "main", "type": "backend", "label": "main.cpp", "sublabel": "frame loop · signals · UI", "pos": [300, 60], "size": [150, 624] },
+
+    { "id": "clock", "type": "backend", "label": "GameClock", "sublabel": "22:00 → 05:30", "pos": [550, 60], "size": [190, 64] },
+    { "id": "rules", "type": "security", "label": "RuleSystem", "sublabel": "12 rules · windows · strikes", "pos": [550, 200], "size": [190, 64] },
+    { "id": "hiding", "type": "backend", "label": "Hiding · Breath", "sublabel": "Searcher: dancer · driver", "pos": [550, 340], "size": [190, 64] },
+    { "id": "ending", "type": "frontend", "label": "Ending", "sublabel": "reveal in the bus", "pos": [550, 480], "size": [190, 64] },
+    { "id": "world", "type": "backend", "label": "World", "sublabel": "Props · lamps · colliders", "pos": [550, 620], "size": [190, 64] },
+
+    { "id": "phone", "type": "frontend", "label": "Phone · Inbox", "sublabel": "rules · AirDrop · flash", "pos": [880, 60], "size": [200, 64] },
+    { "id": "jimmy", "type": "backend", "label": "Companion (Jimmy)", "sublabel": "follow · chat · nudge", "pos": [880, 200], "size": [200, 64] },
+    { "id": "dialogue", "type": "frontend", "label": "Dialogue", "sublabel": "lines · 1-9 choices · flags", "pos": [880, 340], "size": [200, 64] },
+    { "id": "events", "type": "messagebus", "label": "Timed events", "sublabel": "bus · van · dark bus · grandma", "pos": [880, 480], "size": [200, 64] },
+
+    { "id": "app", "type": "cloud", "label": "ter::App", "sublabel": "window · Input · Audio", "pos": [295, 800], "size": [160, 64] },
+    { "id": "renderer", "type": "cloud", "label": "ter::Renderer", "sublabel": "OpenGL · post fx", "pos": [550, 800], "size": [190, 64] },
+    { "id": "gltf", "type": "cloud", "label": "loadGltf", "sublabel": "cgltf · Animator", "pos": [880, 800], "size": [200, 64] },
+
+    { "id": "shaders", "type": "database", "label": "assets/shaders", "sublabel": "mesh.frag fog", "pos": [550, 940], "size": [190, 64] },
+    { "id": "models", "type": "database", "label": "assets/models/*.glb", "sublabel": "sala · npc · dancer · bus", "pos": [880, 940], "size": [200, 64] },
+    { "id": "blender", "type": "external", "label": "Blender scripts", "sublabel": "modelResource/scripts", "pos": [880, 1080], "size": [200, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "game/src", "wraps": ["main", "clock", "rules", "hiding", "ending", "world", "phone", "jimmy", "dialogue", "events"] },
+    { "kind": "region", "label": "terEngine", "wraps": ["app", "renderer", "gltf"] }
+  ],
+  "connections": [
+    { "id": "player-keys", "from": "player", "to": "main", "label": "keys · mouse", "variant": "emphasis" },
+    { "id": "load-json", "from": "data", "to": "main", "label": "load", "variant": "dashed" },
+    { "id": "save-mute", "from": "main", "to": "settings", "label": "mute", "variant": "dashed" },
+    { "id": "playtest-keys", "from": "playtest", "to": "main", "label": "--play keys", "variant": "dashed" },
+
+    { "id": "tick", "from": "main", "to": "clock", "label": "tick" },
+    { "id": "rule-inputs", "from": "main", "to": "rules", "label": "inputs · busy", "variant": "emphasis" },
+    { "id": "breath-game", "from": "main", "to": "hiding", "label": "hide · E" },
+    { "id": "start-ending", "from": "main", "to": "ending", "label": "05:30 board" },
+    { "id": "update-world", "from": "main", "to": "world", "label": "update" },
+
+    { "id": "clock-windows", "from": "clock", "to": "rules", "label": "rule windows" },
+    { "id": "clock-messages", "from": "clock", "to": "phone", "label": "due messages" },
+    { "id": "rules-jimmy", "from": "rules", "to": "jimmy", "label": "window · strike" },
+    { "id": "rules-breath", "from": "rules", "to": "hiding", "label": "breath level" },
+    { "id": "jimmy-lines", "from": "jimmy", "to": "dialogue", "label": "nudges · chat" },
+    { "id": "dialogue-actions", "from": "dialogue", "to": "events", "label": "board · leave · hold" },
+
+    { "id": "run-loop", "from": "main", "to": "app", "label": "app.run(frame)", "variant": "emphasis" },
+    { "id": "world-scene", "from": "world", "to": "renderer", "label": "scene" },
+    { "id": "events-models", "from": "events", "to": "gltf", "label": "bus · driver · grandma" },
+    { "id": "fog-shader", "from": "shaders", "to": "renderer", "label": "fog", "variant": "dashed" },
+    { "id": "glb-read", "from": "models", "to": "gltf", "label": "read" },
+    { "id": "blender-export", "from": "blender", "to": "models", "label": "export", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "One thing at a time", "items": [
+      "main.cpp plays each rule's signal: lamps off, phone buzz, dark bus, scream",
+      "A due rule waits while a bus, van, grandma or open question is on",
+      "Buses, van, grandma and AirDrop wait while a rule window is open"
+    ] },
+    { "dot": "rose", "title": "Rules never kill", "items": [
+      "Breaking a rule: a scare plus a strike; Jimmy comes a step closer",
+      "Rule 5 always brings the ghost dancer, hidden or not",
+      "Everyone ends on the 05:30 bus and the reveal"
+    ] },
+    { "dot": "amber", "title": "Jimmy, the companion", "items": [
+      "Sits, follows, chats by the hour, talks on E",
+      "Nudges the player toward breaking each rule as its sign appears",
+      "Holds the player back from the only real bus at 23:00"
+    ] },
+    { "dot": "cyan", "title": "Testing", "items": [
+      "--play scripts drive keys, walking and clock jumps",
+      "waitfor syncs the script with real events",
+      "The overlap audit logs walk-throughs and bus hits"
+    ] }
+  ]
+}

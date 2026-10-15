@@ -1,0 +1,10 @@
+// Rule 10 (03:00): a bus with no lights at all pulls up; its driver gets out and walks round the shelter looking
+// (src/Searcher with his model, main.cpp). Same format as bus.json. "manual": it only comes when rule 10's window
+// opens (rules.json signal "dark_bus"), and leaves when the window closes.
+{
+  // it creeps in from close by (dark, only its hum gives it away), so it is there before the 10 s to hide are up
+  "route": { "laneZ": -2.6, "fromX": 30, "stopX": 4.5, "toX": -90, "speed": 8, "talkRadius": 0 },
+  "arrivals": [
+    { "at": "03:00", "manual": true, "script": "", "sign": "", "headlights": false, "wait": 60 }
+  ]
+}

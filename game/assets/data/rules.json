@@ -1,0 +1,103 @@
+// The phone's thread from the unknown sender. Format: game/DATA_FORMAT.md
+// Rules 1-8 arrive at the start, 9-12 just after midnight. Each one names a sign the player can see or hear,
+// something they can do with the game's controls, and is checked by the game (timeline: game-comcept.md §1.0).
+{
+  "messages": [
+    { "id": "hello",    "at": "22:01", "text": "คุณกำลังรอรถเที่ยวแรกอยู่ใช่ไหม" },
+    { "id": "promise",  "at": "22:02", "text": "รถจะมาตอนตีห้าครึ่ง ระหว่างนี้ทำตามกฎที่ผมส่งให้ แล้วคุณจะรอด" },
+    { "id": "warn",     "at": "23:30", "text": "อ่านกฎให้ครบทุกข้อ แล้วทำตามให้ได้ทุกข้อ" },
+    { "id": "midnight", "at": "23:58", "text": "ใกล้เที่ยงคืนแล้ว หลังจากนี้กฎจะเปลี่ยน รอข้อความจากผม" }
+  ],
+  "rules": [
+    {
+      "id": "trust_no_one",
+      "at": "22:03",
+      "text": "1. คืนนี้ห้ามไว้ใจใครทั้งนั้น ต่อให้เป็นคนที่คุณรู้จักดีที่สุดก็ตาม ถ้ามีใครขอส่งกฎชุดอื่นหรือข้อความอื่นมาให้ ห้ามรับเด็ดขาด",
+      // checked by trusting Jimmy's AirDropped "new rules" (taking them is the player's own choice)
+      "check": { "type": "flag", "flag": "airdrop", "value": "accepted", "onViolate": { "sound": "sting" } }
+    },
+    {
+      "id": "stay_near",
+      "at": "22:04",
+      "text": "2. ห้ามเดินออกไปนอกช่วงระหว่างเสาไฟสองต้นที่อยู่ปลายศาลาทั้งฝั่งซ้ายและฝั่งขวา ถ้าออกไปเกิน 3 วินาที คุณจะหลงอยู่ในหมอก",
+      "check": { "type": "leave_zone", "zone": "stop_area", "grace": 3, "repeat": true, "onViolate": { "sound": "whisper", "wrap": "stop_area" } }
+    },
+    {
+      "id": "phantom_buzz",
+      "at": "22:05",
+      "text": "3. ถ้าโทรศัพท์สั่นแต่ไม่มีข้อความใหม่เข้ามา ห้ามหยิบโทรศัพท์ขึ้นมาและห้ามเปิดอ่านข้อความ ให้รอจนครบ 10 วินาทีก่อน",
+      "check": { "at": "22:30", "seconds": 10, "signal": "phone_buzz", "type": "phone_held", "onViolate": { "sound": "sting" } }
+    },
+    {
+      "id": "shadow",
+      "at": "22:06",
+      "text": "4. ถ้าเห็นเงาคนยืนนิ่งอยู่ริมราวกันตกฝั่งตรงข้ามถนน ห้ามมองมันรวมกันเกิน 3 วินาที ให้หันไปทางอื่นทันที มันจะรู้ว่าคุณเห็นมัน",
+      "check": { "at": "22:50", "seconds": 25, "signal": "shadow_figure", "type": "look_at", "target": [-14, 1.5, -7.0], "coneDeg": 12, "max": 3, "onViolate": { "sound": "whisper", "hide": "shadow_figure" } }
+    },
+    {
+      "id": "street_dark",
+      "at": "22:07",
+      "text": "5. ถ้าไฟถนนทั้งสองต้นดับพร้อมกัน ให้เก็บโทรศัพท์ แล้วมุดเข้าไปซ่อนใต้ม้านั่งในศาลาภายใน 8 วินาที อยู่ในนั้นจนกว่าไฟจะติดเอง และหายใจให้เบาที่สุด",
+      "check": { "at": "23:25", "seconds": 35, "signal": "street_lights_off", "type": "must_hide", "spot": "under_bench", "within": 8, "breath": "easy", "onViolate": { "sound": "sting", "dancer": true } }
+    },
+    {
+      "id": "small_van",
+      "at": "22:08",
+      "text": "6. ขึ้นได้เฉพาะรถโดยสารคันใหญ่และเก่าเท่านั้น ถ้ามีรถตู้คันเล็กมาจอดและคนขับชวนไปส่ง ให้ตอบปฏิเสธ",
+      "check": { "type": "flag", "flag": "van_answer", "value": "accept", "onViolate": { "sound": "sting" } }
+    },
+    {
+      "id": "old_woman",
+      "at": "22:09",
+      "text": "7. ถ้าหญิงชราขอให้ช่วยเข็นรถ ช่วยได้ แต่ห้ามเดินตามแกออกนอกแสงไฟเข้าไปในป่า และห้ามรับของกินจากแก",
+      "check": { "type": "flag", "flag": "grandma_forest", "onViolate": {} }
+    },
+    {
+      "id": "shelter_dark",
+      "at": "22:10",
+      "text": "8. ถ้าไฟในศาลาดับ ให้ออกไปยืนใต้เสาไฟถนนต้นทางซ้ายของศาลา (เมื่อหันหน้าออกถนน) ภายใน 10 วินาที",
+      "check": { "at": "00:40", "seconds": 20, "signal": "shelter_light_off", "type": "must_be_in", "zone": "lamp_light", "within": 10, "onViolate": { "sound": "sting" } }
+    },
+
+    {
+      "id": "dragging",
+      "at": "00:02",
+      "text": "9. ถ้าไฟถนนดับไปหนึ่งต้นและได้ยินเสียงลากของบนพื้น ให้ขึ้นไปนั่งบนม้านั่งในศาลาภายใน 6 วินาที ห้ามลุกจนกว่าเสียงจะหยุด",
+      "check": { "at": "01:30", "seconds": 30, "signal": "dragging_sound", "type": "must_hide", "spot": "bench_seat", "within": 6, "phoneAway": false, "onViolate": { "sound": "sting" } }
+    },
+    {
+      "id": "dark_bus",
+      "at": "00:03",
+      "text": "10. ตอนตีสาม ถ้ามีรถเมล์ไม่เปิดไฟมาจอด ให้ไปซ่อนหลังศาลาภายใน 10 วินาที ห้ามเปิดไฟฉาย และกลั้นหายใจไว้จนกว่ารถจะไป",
+      "check": { "at": "03:00", "seconds": 45, "signal": "dark_bus", "type": "must_hide", "spot": "behind_shelter", "within": 10, "breath": "hard", "noLight": true, "onViolate": { "sound": "sting", "scare": "driver" } }
+    },
+    {
+      "id": "not_your_bag",
+      "at": "00:04",
+      "text": "11. ถ้าเห็นกระเป๋าหน้าตาเหมือนของคุณวางอยู่บนม้านั่งในศาลา ห้ามหยิบ ของของคุณอยู่กับตัวคุณเสมอ",
+      "check": { "at": "04:00", "seconds": 40, "signal": "bag", "type": "flag", "flag": "took_bag", "onViolate": { "sound": "sting" } }
+    },
+    {
+      "id": "scream",
+      "at": "00:05",
+      "text": "12. ข้อสุดท้าย ถ้าได้ยินเสียงกรีดร้องจากในป่า ให้หยุดยืนนิ่งทันที ห้ามขยับ และหายใจให้เบาที่สุดจนกว่าเสียงจะหายไป เมื่อรถเที่ยวแรกมาถึงตอนตีห้าครึ่ง ถือว่าคุณรอดแล้ว",
+      "check": { "at": "04:45", "seconds": 20, "signal": "scream", "type": "still", "maxMove": 0.2, "breath": "easy", "onViolate": { "sound": "sting" } }
+    }
+  ],
+
+  // the companion's fake rules: at 01:05 he says his phone got "new rules" and offers to AirDrop them
+  // (dialogue script friend_airdrop). Accepted, they show up as photos of a note, crisp, never fading.
+  // Each one leads the player into breaking a real rule (the number in brackets).
+  "airdrop": {
+    "at": "01:05",
+    "script": "friend_airdrop",
+    "from": "จิมมี่",
+    "rules": [
+      { "id": "fake_header",  "text": "กฎชุดใหม่ (ใช้แทนชุดเก่าทั้งหมด กฎเก่าใช้ไม่ได้แล้ว)" },
+      { "id": "fake_dragging", "text": "1. ถ้าไฟหรี่ลง ให้ลุกออกไปยืนใต้ไฟถนนดวงที่สว่างที่สุด อย่าอยู่ในศาลา" },
+      { "id": "fake_bus",     "text": "2. ตอนตีสาม ถ้ามีรถเมล์มา ให้เปิดไฟฉายโบกให้มันจอด รถคันนั้นจะพาคุณออกไป" },
+      { "id": "fake_bag",     "text": "3. ถ้าเห็นกระเป๋าวางอยู่ในศาลา ให้เก็บไว้กับตัว ข้างในมีของที่คุณต้องใช้" },
+      { "id": "fake_scream",  "text": "4. ถ้าได้ยินเสียงกรีดร้อง ให้วิ่งออกจากศาลาทันที อย่าหยุดจนกว่าเสียงจะหายไป" }
+    ]
+  }
+}

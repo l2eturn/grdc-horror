@@ -1,0 +1,123 @@
+{
+  "_doc": "Triangle and texture budgets from game-comcept.md §1.1. tris = [min, max]; texMax = longest texture side in px; height = expected world height in metres (glTF Y). Per-model keys override the category. texMaxByImage raises the limit for one named image (e.g. readable text).",
+  "maxPrimitives": 40,
+  "categories": {
+    "small": {
+      "tris": [
+        50,
+        300
+      ],
+      "texMax": 128
+    },
+    "medium": {
+      "tris": [
+        300,
+        1500
+      ],
+      "texMax": 128
+    },
+    "character": {
+      "tris": [
+        1500,
+        3000
+      ],
+      "texMax": 256
+    },
+    "vehicle": {
+      "tris": [
+        1500,
+        4000
+      ],
+      "texMax": 256
+    },
+    "foliage": {
+      "tris": [
+        300,
+        600
+      ],
+      "texMax": 256
+    },
+    "setpiece": {
+      "tris": [
+        1000,
+        3500
+      ],
+      "texMax": 256
+    }
+  },
+  "models": {
+    "phone": {
+      "category": "small",
+      "texMax": 512,
+      "height": [
+        0.11,
+        0.14
+      ],
+      "ao": false,
+      "_note": "12 cm hand-held object: baked AO is all white at this size, so none is baked"
+    },
+    "cart": {
+      "category": "medium",
+      "height": [
+        0.8,
+        1.8
+      ]
+    },
+    "shrine": {
+      "category": "setpiece",
+      "height": [
+        8,
+        16
+      ],
+      "_note": "spirit house under its banyan tree"
+    },
+    "sala": {
+      "category": "medium",
+      "height": [
+        2.4,
+        5.5
+      ]
+    },
+    "bus": {
+      "category": "vehicle",
+      "height": [
+        2.8,
+        3.8
+      ]
+    },
+    "npc": {
+      "category": "character",
+      "height": [
+        1.6,
+        1.9
+      ]
+    },
+    "driver": {
+      "category": "character",
+      "height": [
+        1.2,
+        1.9
+      ],
+      "_note": "rest pose standing since npc_export.standing_rest; the game always plays drive"
+    },
+    "grandma": {
+      "category": "character",
+      "height": [
+        1.3,
+        1.75
+      ]
+    },
+    "dancer": {
+      "category": "character",
+      "height": [
+        1.5,
+        2.1
+      ],
+      "tris": [
+        1500,
+        4800
+      ],
+      "_note": "hero monster seen face-to-face in the jump scare; v2 at ~4,500 tris is the design in game-comcept.md §1.0.1 (hair strands, tiered crown, claws)"
+    }
+  }
+}
